@@ -1,0 +1,291 @@
+#include <Servo.h>
+#include <Adafruit_NeoPixel.h>
+
+Servo servo;
+Servo servo2;
+Servo servo3;
+Servo servo4;
+
+//const int buzzer = 9; //buzzer to arduino pin 9
+int bPin = 8;
+int bPin2 = 9;
+int npPin = 10;
+int npPin2= 11;
+int pPin =7;
+
+
+
+
+boolean isPushed = false;
+boolean isPushed2 = false;
+
+
+Adafruit_NeoPixel strip(4, npPin); 
+Adafruit_NeoPixel strip2 (4, npPin2); 
+
+uint32_t color = strip.Color(0, 255, 255);
+
+
+boolean prevButtonState;
+boolean button1State;
+boolean button2State;
+boolean prevButtonState2;
+
+
+void setup(){
+
+ servo.attach(3);
+  servo2.attach(4);
+  servo3.attach(5);
+  servo4.attach(2);
+
+   strip.begin();
+  strip.clear();
+  strip.show();
+
+  strip2.begin();
+  strip2.clear();
+  strip2.show();
+  
+  pinMode(bPin, INPUT);
+ Serial.begin(9600);
+
+}
+
+void loop(){
+ 
+ Serial.println(isPushed);
+
+ prevButtonState = button1State;
+ prevButtonState2 = button2State;
+
+  button1State = debouncedReading(bPin, prevButtonState);
+   button2State = debouncedReading(bPin2, prevButtonState2);
+   
+
+
+///POSITIVE INTERACTION= RIGHT BUTTON
+
+  if (button1State==true && prevButtonState == false){
+
+
+  
+    servo4.write(130);
+      servo3.write(50);
+      delay(1000);
+
+    servo.write(110);
+      servo2.write(70);
+      delay(2000);
+      servo.write(90);
+      servo2.write(90);
+      delay(2000);
+
+for (int i = 0; i < strip.numPixels(); i++) {
+   strip.setPixelColor(i, 255, 0, 255);
+}
+
+strip.show();
+
+      
+
+  tone(pPin, 200);
+  delay(200);
+ 
+  tone(pPin, 250);
+  delay(200);
+
+  tone(9, 200);
+  delay(300);
+
+   noTone(pPin);
+   delay(400);
+
+   tone(pPin, 200);
+  delay(200);
+ 
+  tone(pPin, 250);
+  delay(200);
+
+  tone(9, 200);
+  delay(300);
+
+   noTone(pPin);
+   delay(400);
+
+   for (int i = 0; i < strip2.numPixels(); i++) {
+   strip2.setPixelColor(i, 255, 0, 255);
+}
+
+strip2.show();
+
+      servo3.write(90);
+      servo4.write(90);
+      
+
+
+tone(pPin, 180);
+   delay(100);
+
+   noTone(pPin);
+  delay(1000);
+
+  tone(pPin, 210);
+  delay(200);
+
+  noTone(pPin);
+  delay(100);
+
+
+   for (int i = 0; i < strip.numPixels(); i++) {
+   strip.setPixelColor(i, 0, 0, 0);
+}
+strip.show(); 
+
+
+tone(pPin, 210);
+  delay(100);
+
+  tone(pPin, 10);
+  delay(1000);
+
+  noTone(pPin);
+delay(400);
+
+
+// 
+
+ delay(2000);
+
+for (int i = 0; i < strip2.numPixels(); i++) {
+   strip2.setPixelColor(i, 0, 0, 0);
+}
+
+strip2.show();
+
+
+  }
+
+
+
+
+/// NEGATIVE INTERACTION = left button
+
+
+
+
+  if (button2State==true && prevButtonState2 == false){
+
+        servo3.write(90);
+       servo4.write(90);
+
+      servo4.write(120);
+     servo3.write(60);
+     delay(200);
+    servo3.write(90);
+    servo4.write(90);
+  delay(200);
+    servo4.write(120);
+     servo3.write(60);
+delay(200);
+     servo3.write(90);
+    servo4.write(90);
+
+
+delay(300);
+
+      servo.write(50);
+      servo2.write(130);
+      delay(1000);
+      //tone(pPin, 200);      
+      //delay(3000);
+for (int i = 0; i < strip.numPixels(); i++) {
+   strip.setPixelColor(i, 255, 0, 0);
+}
+strip.show();
+
+      
+
+ 
+  tone(pPin, 31);
+  delay(600);
+
+  tone(9, 37);
+  delay(500);
+
+   noTone(pPin);
+   delay(200);
+
+   tone(pPin, 52);
+  delay(200);
+ 
+  tone(pPin, 150);
+  delay(400);
+
+  tone(9, 60);
+  delay(600);
+
+  tone(pPin, 70);
+  delay(500);
+
+  tone(pPin, 31);
+  delay(600);
+
+   noTone(pPin);
+   delay(400);
+
+   delay(200);
+
+
+   servo4.write(130);
+  servo3.write(50);
+
+  for (int i = 0; i < strip2.numPixels(); i++) {
+   strip2.setPixelColor(i, 0, 0, 255);
+}
+
+strip2.show();
+
+
+tone(pPin, 27);
+  delay(700);
+
+  tone(pPin, 150);
+  delay(700);
+
+   tone(pPin, 100);
+  delay(500);
+
+  noTone(pPin);
+   delay(400);
+
+
+
+delay(2000);
+
+   for (int i = 0; i < strip.numPixels(); i++) {
+   strip.setPixelColor(i, 0, 0, 0);
+}
+strip.show(); 
+
+for (int i = 0; i < strip2.numPixels(); i++) {
+   strip2.setPixelColor(i, 0, 0, 0);
+}
+strip2.show(); 
+  }
+
+
+  
+}
+boolean debouncedReading(int aButtonPin, boolean aPrevState){
+  boolean currentState = digitalRead(aButtonPin);
+  
+  
+  if (currentState != aPrevState){
+    //wait for a bit
+    delay(10);
+    
+  }
+      return currentState;
+
+}
